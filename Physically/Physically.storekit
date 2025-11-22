@@ -1,0 +1,33 @@
+{
+  "identifier" : "A1B2C3D4",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "6F3A9D2E",
+      "localizations" : [
+        {
+          "description" : "Unlock apps for 1 hour",
+          "displayName" : "Squat Toll",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.physically.toll",
+      "referenceName" : "Squat Toll",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

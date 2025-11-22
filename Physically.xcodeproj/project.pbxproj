@@ -6,23 +6,130 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		64B2802C2ED1527000B07C8A /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64F7B1232ECDB92300F491A2 /* ManagedSettings.framework */; };
+		64B280342ED1527000B07C8A /* PhysicallyAction.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 64B2802B2ED1527000B07C8A /* PhysicallyAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		64F7B11D2ECDB82A00F491A2 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64F7B11C2ECDB82900F491A2 /* StoreKit.framework */; };
+		64F7B1242ECDB92300F491A2 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64F7B1232ECDB92300F491A2 /* ManagedSettings.framework */; };
+		64F7B1262ECDB92300F491A2 /* ManagedSettingsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64F7B1252ECDB92300F491A2 /* ManagedSettingsUI.framework */; };
+		64F7B12E2ECDB92400F491A2 /* PhysicallyShield.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 64F7B1222ECDB91F00F491A2 /* PhysicallyShield.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		64B280322ED1527000B07C8A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 64F7B0FC2ECD4BEF00F491A2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 64B2802A2ED1527000B07C8A;
+			remoteInfo = PhysicallyAction;
+		};
+		64F7B12C2ECDB92400F491A2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 64F7B0FC2ECD4BEF00F491A2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 64F7B1212ECDB91E00F491A2;
+			remoteInfo = PhysicallyShield;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		64F7B1332ECDB92400F491A2 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				64B280342ED1527000B07C8A /* PhysicallyAction.appex in Embed Foundation Extensions */,
+				64F7B12E2ECDB92400F491A2 /* PhysicallyShield.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		64B2802B2ED1527000B07C8A /* PhysicallyAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PhysicallyAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		64F7B1042ECD4BEF00F491A2 /* Physically.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Physically.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		64F7B11C2ECDB82900F491A2 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		64F7B1222ECDB91F00F491A2 /* PhysicallyShield.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PhysicallyShield.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		64F7B1232ECDB92300F491A2 /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
+		64F7B1252ECDB92300F491A2 /* ManagedSettingsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettingsUI.framework; path = System/Library/Frameworks/ManagedSettingsUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		64B280242ED14BD200B07C8A /* Exceptions for "Physically" folder in "Physically" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 64F7B1032ECD4BEF00F491A2 /* Physically */;
+		};
+		64B280382ED1527000B07C8A /* Exceptions for "PhysicallyAction" folder in "PhysicallyAction" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 64B2802A2ED1527000B07C8A /* PhysicallyAction */;
+		};
+		64F7B12F2ECDB92400F491A2 /* Exceptions for "PhysicallyShield" folder in "PhysicallyShield" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 64F7B1212ECDB91E00F491A2 /* PhysicallyShield */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		64B2802D2ED1527000B07C8A /* PhysicallyAction */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				64B280382ED1527000B07C8A /* Exceptions for "PhysicallyAction" folder in "PhysicallyAction" target */,
+			);
+			path = PhysicallyAction;
+			sourceTree = "<group>";
+		};
 		64F7B1062ECD4BEF00F491A2 /* Physically */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				64B280242ED14BD200B07C8A /* Exceptions for "Physically" folder in "Physically" target */,
+			);
 			path = Physically;
+			sourceTree = "<group>";
+		};
+		64F7B1272ECDB92300F491A2 /* PhysicallyShield */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				64F7B12F2ECDB92400F491A2 /* Exceptions for "PhysicallyShield" folder in "PhysicallyShield" target */,
+			);
+			path = PhysicallyShield;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		64B280282ED1527000B07C8A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64B2802C2ED1527000B07C8A /* ManagedSettings.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		64F7B1012ECD4BEF00F491A2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64F7B11D2ECDB82A00F491A2 /* StoreKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		64F7B11F2ECDB91E00F491A2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64F7B1242ECDB92300F491A2 /* ManagedSettings.framework in Frameworks */,
+				64F7B1262ECDB92300F491A2 /* ManagedSettingsUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +140,9 @@
 			isa = PBXGroup;
 			children = (
 				64F7B1062ECD4BEF00F491A2 /* Physically */,
+				64F7B1272ECDB92300F491A2 /* PhysicallyShield */,
+				64B2802D2ED1527000B07C8A /* PhysicallyAction */,
+				64F7B11B2ECDB82800F491A2 /* Frameworks */,
 				64F7B1052ECD4BEF00F491A2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,13 +151,47 @@
 			isa = PBXGroup;
 			children = (
 				64F7B1042ECD4BEF00F491A2 /* Physically.app */,
+				64F7B1222ECDB91F00F491A2 /* PhysicallyShield.appex */,
+				64B2802B2ED1527000B07C8A /* PhysicallyAction.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		64F7B11B2ECDB82800F491A2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				64F7B11C2ECDB82900F491A2 /* StoreKit.framework */,
+				64F7B1232ECDB92300F491A2 /* ManagedSettings.framework */,
+				64F7B1252ECDB92300F491A2 /* ManagedSettingsUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		64B2802A2ED1527000B07C8A /* PhysicallyAction */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 64B280352ED1527000B07C8A /* Build configuration list for PBXNativeTarget "PhysicallyAction" */;
+			buildPhases = (
+				64B280272ED1527000B07C8A /* Sources */,
+				64B280282ED1527000B07C8A /* Frameworks */,
+				64B280292ED1527000B07C8A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				64B2802D2ED1527000B07C8A /* PhysicallyAction */,
+			);
+			name = PhysicallyAction;
+			packageProductDependencies = (
+			);
+			productName = PhysicallyAction;
+			productReference = 64B2802B2ED1527000B07C8A /* PhysicallyAction.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		64F7B1032ECD4BEF00F491A2 /* Physically */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 64F7B10F2ECD4BF100F491A2 /* Build configuration list for PBXNativeTarget "Physically" */;
@@ -55,10 +199,13 @@
 				64F7B1002ECD4BEF00F491A2 /* Sources */,
 				64F7B1012ECD4BEF00F491A2 /* Frameworks */,
 				64F7B1022ECD4BEF00F491A2 /* Resources */,
+				64F7B1332ECDB92400F491A2 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				64F7B12D2ECDB92400F491A2 /* PBXTargetDependency */,
+				64B280332ED1527000B07C8A /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				64F7B1062ECD4BEF00F491A2 /* Physically */,
@@ -70,6 +217,28 @@
 			productReference = 64F7B1042ECD4BEF00F491A2 /* Physically.app */;
 			productType = "com.apple.product-type.application";
 		};
+		64F7B1212ECDB91E00F491A2 /* PhysicallyShield */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 64F7B1302ECDB92400F491A2 /* Build configuration list for PBXNativeTarget "PhysicallyShield" */;
+			buildPhases = (
+				64F7B11E2ECDB91E00F491A2 /* Sources */,
+				64F7B11F2ECDB91E00F491A2 /* Frameworks */,
+				64F7B1202ECDB91E00F491A2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				64F7B1272ECDB92300F491A2 /* PhysicallyShield */,
+			);
+			name = PhysicallyShield;
+			packageProductDependencies = (
+			);
+			productName = PhysicallyShield;
+			productReference = 64F7B1222ECDB91F00F491A2 /* PhysicallyShield.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -80,7 +249,13 @@
 				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
+					64B2802A2ED1527000B07C8A = {
+						CreatedOnToolsVersion = 26.1.1;
+					};
 					64F7B1032ECD4BEF00F491A2 = {
+						CreatedOnToolsVersion = 26.1.1;
+					};
+					64F7B1212ECDB91E00F491A2 = {
 						CreatedOnToolsVersion = 26.1.1;
 					};
 				};
@@ -100,12 +275,28 @@
 			projectRoot = "";
 			targets = (
 				64F7B1032ECD4BEF00F491A2 /* Physically */,
+				64F7B1212ECDB91E00F491A2 /* PhysicallyShield */,
+				64B2802A2ED1527000B07C8A /* PhysicallyAction */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		64B280292ED1527000B07C8A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		64F7B1022ECD4BEF00F491A2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		64F7B1202ECDB91E00F491A2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -115,7 +306,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		64B280272ED1527000B07C8A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		64F7B1002ECD4BEF00F491A2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		64F7B11E2ECDB91E00F491A2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -124,7 +329,78 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		64B280332ED1527000B07C8A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 64B2802A2ED1527000B07C8A /* PhysicallyAction */;
+			targetProxy = 64B280322ED1527000B07C8A /* PBXContainerItemProxy */;
+		};
+		64F7B12D2ECDB92400F491A2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 64F7B1212ECDB91E00F491A2 /* PhysicallyShield */;
+			targetProxy = 64F7B12C2ECDB92400F491A2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		64B280362ED1527000B07C8A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PhysicallyAction/PhysicallyAction.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LHCC7W3H84;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PhysicallyAction/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PhysicallyAction;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pratik.Physically.PhysicallyAction;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		64B280372ED1527000B07C8A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PhysicallyAction/PhysicallyAction.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LHCC7W3H84;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PhysicallyAction/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PhysicallyAction;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pratik.Physically.PhysicallyAction;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		64F7B10D2ECD4BF100F491A2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -249,10 +525,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Physically/Physically.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LHCC7W3H84;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Physically/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -280,10 +559,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Physically/Physically.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LHCC7W3H84;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Physically/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -306,9 +588,76 @@
 			};
 			name = Release;
 		};
+		64F7B1312ECDB92400F491A2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PhysicallyShield/PhysicallyShield.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LHCC7W3H84;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PhysicallyShield/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PhysicallyShield;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pratik.Physically.PhysicallyShield;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		64F7B1322ECDB92400F491A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PhysicallyShield/PhysicallyShield.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LHCC7W3H84;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PhysicallyShield/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PhysicallyShield;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pratik.Physically.PhysicallyShield;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		64B280352ED1527000B07C8A /* Build configuration list for PBXNativeTarget "PhysicallyAction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				64B280362ED1527000B07C8A /* Debug */,
+				64B280372ED1527000B07C8A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		64F7B0FF2ECD4BEF00F491A2 /* Build configuration list for PBXProject "Physically" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -323,6 +672,15 @@
 			buildConfigurations = (
 				64F7B1102ECD4BF100F491A2 /* Debug */,
 				64F7B1112ECD4BF100F491A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		64F7B1302ECDB92400F491A2 /* Build configuration list for PBXNativeTarget "PhysicallyShield" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				64F7B1312ECDB92400F491A2 /* Debug */,
+				64F7B1322ECDB92400F491A2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
