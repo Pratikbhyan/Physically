@@ -58,6 +58,7 @@ struct WalkOfShameView: View {
             Spacer()
         }
         .padding()
+        .ignoresSafeArea(.keyboard) // Add this to prevent constraint conflicts
         .onAppear {
             startTimer()
         }
