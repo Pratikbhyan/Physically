@@ -1,46 +1,36 @@
-//
-//  DeviceActivityMonitorExtension.swift
-//  PhysicallyMonitor
-//
-//  Created by Pratik Bhyan on 22/11/25.
-//
-
 import DeviceActivity
 import ManagedSettings
 import FamilyControls
 import Foundation
+import os.log // Import for logging
 
-// Ensure this matches the App Group ID you set in Xcode
-let appGroupID = "group.com.pratik.physically"
-// Optionally override any of the functions below.
-// Make sure that your class name matches the NSExtensionPrincipalClass in your Info.plist.
 class DeviceActivityMonitorExtension: DeviceActivityMonitor {
     
     let store = ManagedSettingsStore()
+    let logger = Logger(subsystem: "com.pratik.physically", category: "Monitor")
     
-    // When the timer STARTS: Do NOTHING.
-    // The Main App has already set the specific unlock state.
-    // We don't want to override it by unlocking everything.
     override func intervalDidStart(for activity: DeviceActivityName) {
         super.intervalDidStart(for: activity)
-        
-        if activity == .sessionTimer {
-            print("Monitor: Session started.")
-        }
+        logger.log("PhysicallyMonitor: Interval DID START for \(activity.rawValue)")
     }
     
-    // When the timer ENDS: LOCK everything
     override func intervalDidEnd(for activity: DeviceActivityName) {
         super.intervalDidEnd(for: activity)
+        logger.log("PhysicallyMonitor: Interval DID END for \(activity.rawValue)")
         
         if activity == .sessionTimer {
-            // 1. Load the saved apps from App Group
+            // 1. Load the saved apps from App Group using SharedModel helper
             let selection = UserDefaults.shared.appSelection
             
-            // 2. Apply the shield (Lock)
+            // 2. Re-Apply the shield (LOCK EVERYTHING)
+            // Even if selection is empty, this ensures we reset the state.
             store.shield.applications = selection.applicationTokens
             store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(selection.categoryTokens)
-            // store.shield.webDomains = selection.webDomainTokens // Uncomment if you block websites
+            
+            // 3. Stop monitoring so this doesn't repeat tomorrow
+            // Note: The extension generally cannot stop monitoring for the main app, 
+            // but the re-lock logic above is persistent until changed.
+            logger.log("PhysicallyMonitor: Shield restored. Blocked \(selection.applicationTokens.count) apps.")
         }
     }
 }

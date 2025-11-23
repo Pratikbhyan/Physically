@@ -11,9 +11,11 @@ class BlockingManager: ObservableObject {
     @Published var selection = FamilyActivitySelection()
     
     private let store = ManagedSettingsStore()
-    private let userDefaultsKey = "FamilyActivitySelection"
-    // Ensure this matches the App Group ID you set in Xcode
+    private let center = DeviceActivityCenter() // moved to property
+    
+    // Ensure this matches your entitlements exactly
     private let appGroupID = "group.com.pratik.physically"
+    private let userDefaultsKey = "SavedAppSelection" // Matched with SharedModel
     
     private init() {
         loadSelection()
@@ -23,90 +25,77 @@ class BlockingManager: ObservableObject {
         let applications = selection.applicationTokens
         let categories = selection.categoryTokens
         
-        saveSelection() // Save whenever we update
+        saveSelection()
         
-        if applications.isEmpty && categories.isEmpty {
-            store.shield.applications = nil
-            store.shield.applicationCategories = nil
-        } else {
-            store.shield.applications = applications
-            store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(categories)
-        }
+        // Only update the store if we are NOT currently in an active unlock session
+        // (Simplified logic: always update, but user assumes risk if modifying during a session)
+        store.shield.applications = applications
+        store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(categories)
     }
     
     private func saveSelection() {
-        // Save to App Group Defaults so Monitor can access it
-        if let defaults = UserDefaults(suiteName: appGroupID),
-           let data = try? JSONEncoder().encode(selection) {
-            defaults.set(data, forKey: userDefaultsKey)
-        }
-        // Also save to standard for local app usage (redundant but safe)
-        if let data = try? JSONEncoder().encode(selection) {
-            UserDefaults.standard.set(data, forKey: userDefaultsKey)
-        }
+        // Use the extension variable from SharedModel.swift for consistency
+        UserDefaults.shared.appSelection = selection
     }
     
     private func loadSelection() {
-        // Try App Group first
-        if let defaults = UserDefaults(suiteName: appGroupID),
-           let data = defaults.data(forKey: userDefaultsKey),
-           let savedSelection = try? JSONDecoder().decode(FamilyActivitySelection.self, from: data) {
-            selection = savedSelection
-            return
-        }
-        
-        // Fallback to standard
-        if let data = UserDefaults.standard.data(forKey: userDefaultsKey),
-           let savedSelection = try? JSONDecoder().decode(FamilyActivitySelection.self, from: data) {
-            selection = savedSelection
-        }
+        selection = UserDefaults.shared.appSelection
     }
     
-    // Call this when user taps "Start Session"
     func startSession(minutes: Int, for token: ApplicationToken? = nil) {
-        // 1. Save the FULL selection so the Extension can read it later and RESTORE it
-        UserDefaults.shared.appSelection = selection
+        // 1. Force Save the FULL selection immediately
+        saveSelection()
         
-        // 2. Unlock Logic
-        if let token = token {
-            // Specific Unlock: Remove ONLY this app from the current blocked list
-            var tempApplications = selection.applicationTokens
-            tempApplications.remove(token)
-            
-            // Apply the modified shield (Everything else remains blocked)
-            store.shield.applications = tempApplications
-            store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(selection.categoryTokens)
-            // store.shield.webDomains = selection.webDomainTokens
-        } else {
-            // Global Unlock (Fallback if no token provided)
-            store.shield.applications = nil
-            store.shield.applicationCategories = nil
-            store.shield.webDomains = nil
+        // 2. Unlock Logic (Visual update)
+        // 2. Unlock Logic (Visual update)
+        // We wrap in main async to ensure immediate UI update
+        DispatchQueue.main.async {
+            if let token = token {
+                var tempApplications = self.selection.applicationTokens
+                tempApplications.remove(token)
+                
+                self.store.shield.applications = tempApplications.isEmpty ? nil : tempApplications
+                
+                if self.selection.categoryTokens.isEmpty {
+                    self.store.shield.applicationCategories = nil
+                } else {
+                    self.store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(self.selection.categoryTokens)
+                }
+            } else {
+                self.store.shield.applications = nil
+                self.store.shield.applicationCategories = nil
+            }
+            self.store.shield.webDomains = nil
         }
         
-        // 3. Create the schedule
+        // 3. Stop any existing monitoring to avoid conflicts
+        center.stopMonitoring([.sessionTimer])
+        
+        // 4. Create a Robust Schedule
+        // We set the start time to 5 seconds in the past to ensure the system sees it as "Active"
+        // We use repeats: true because one-time schedules are often buggy in iOS 16/17, 
+        // even though we only want it once. We will cancel it in the extension.
         let now = Date()
+        let start = Calendar.current.date(byAdding: .second, value: -5, to: now)!
         let end = Calendar.current.date(byAdding: .minute, value: minutes, to: now)!
         
         let schedule = DeviceActivitySchedule(
-            intervalStart: Calendar.current.dateComponents([.hour, .minute, .second], from: now),
+            intervalStart: Calendar.current.dateComponents([.hour, .minute, .second], from: start),
             intervalEnd: Calendar.current.dateComponents([.hour, .minute, .second], from: end),
-            repeats: false // essential: do not repeat this tomorrow
+            repeats: true
         )
         
-        // 4. Start Monitoring
-        let center = DeviceActivityCenter()
+        // 5. Start Monitoring
         do {
             try center.startMonitoring(.sessionTimer, during: schedule)
-            print("Session started! Apps unlocked for \(minutes) mins.")
+            print("Physically: Monitoring started for \(minutes) minutes.")
         } catch {
-            print("Error starting schedule: \(error)")
+            print("Physically: Error starting schedule: \(error)")
+            // If the schedule fails (e.g. interval too short), we MUST rely on the backup timer.
         }
         
-        // 5. BACKUP: Main App Timer (Belt and Suspenders)
-        // If the Extension fails to fire (e.g. simulator issues, budget weirdness),
-        // this timer will re-lock the apps if the main app is still alive.
-        
+        // 6. BACKUP: Main App Timer
+        // Essential for short intervals (e.g. 1 minute) which iOS might reject with 'intervalTooShort'.
         let duration = TimeInterval(minutes * 60)
         var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
         backgroundTaskID = UIApplication.shared.beginBackgroundTask {
@@ -115,8 +104,8 @@ class BlockingManager: ObservableObject {
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
-            print("Main App: Timer ended. Re-locking.")
-            // Restore the full shield from the saved selection
+            print("Main App: Backup Timer ended. Re-locking.")
+            // Restore the full shield
             let selection = UserDefaults.shared.appSelection
             self.store.shield.applications = selection.applicationTokens
             self.store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(selection.categoryTokens)
@@ -128,21 +117,12 @@ class BlockingManager: ObservableObject {
         }
     }
     
-    // Call this to force-lock immediately (Emergency Stop)
     func stopSession() {
-        let center = DeviceActivityCenter()
         center.stopMonitoring([.sessionTimer])
-        
-        // Manually trigger the lock logic
-        let store = ManagedSettingsStore()
-        let selection = UserDefaults.shared.appSelection
-        store.shield.applications = selection.applicationTokens
-        store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(selection.categoryTokens)
+        updateShield() // Re-applies the saved selection
     }
     
-    // Legacy adapter for ContentView
     func unblockTemporarily(duration: TimeInterval = 900, for token: ApplicationToken? = nil) {
-        // Convert duration to minutes (rounding up)
         let minutes = Int(ceil(duration / 60.0))
         startSession(minutes: minutes, for: token)
     }

@@ -14,13 +14,8 @@ struct SettingsView: View {
                         HStack {
                             Slider(value: Binding(
                                 get: {
-                                    let val = userStats.exchangeRateSquats
-                                    if val <= 30 { return 0 }
-                                    if val <= 60 { return 1 }
-                                    return Double(val / 60) - 1.0 + 1.0 // Map 120->2, 180->3...
-                                    // Actually simpler to map index:
                                     // 0: 30, 1: 60, 2: 120, 3: 180, 4: 240, 5: 300
-                                    // Let's use a helper function logic inline or cleaner binding
+                                    let val = userStats.exchangeRateSquats
                                     let steps = [30, 60, 120, 180, 240, 300]
                                     return Double(steps.firstIndex(where: { $0 >= val }) ?? 0)
                                 },
