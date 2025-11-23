@@ -9,6 +9,8 @@ class BlockingManager: ObservableObject {
     static let shared = BlockingManager()
     
     @Published var selection = FamilyActivitySelection()
+    @Published var currentlyUnblockedToken: ApplicationToken?
+    @Published var sessionEndTime: Date?
     
     private let store = ManagedSettingsStore()
     private let center = DeviceActivityCenter()
@@ -52,10 +54,16 @@ class BlockingManager: ObservableObject {
                 self.store.shield.applications = tempApplications
                 // Keep categories blocked if unlocking specific app
                 self.store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(self.selection.categoryTokens)
+                
+                // Track Active Session
+                self.currentlyUnblockedToken = token
+                self.sessionEndTime = Date().addingTimeInterval(TimeInterval(minutes * 60))
             } else {
                 // Global unlock
                 self.store.shield.applications = nil
                 self.store.shield.applicationCategories = nil
+                self.currentlyUnblockedToken = nil
+                self.sessionEndTime = Date().addingTimeInterval(TimeInterval(minutes * 60))
             }
             self.store.shield.webDomains = nil
         }
@@ -103,6 +111,12 @@ class BlockingManager: ObservableObject {
     func stopSession() {
         center.stopMonitoring([.sessionTimer])
         updateShield() // Re-lock everything
+        
+        // Clear Active Session State
+        DispatchQueue.main.async {
+            self.currentlyUnblockedToken = nil
+            self.sessionEndTime = nil
+        }
     }
     
     func unblockTemporarily(duration: TimeInterval = 900, for token: ApplicationToken? = nil) {
