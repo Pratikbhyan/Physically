@@ -69,11 +69,13 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         let userInfo = response.notification.request.content.userInfo
         
         if let action = userInfo["action"] as? String {
+            let tokenData = userInfo["tokenData"] as? Data
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 if action == "exercise" {
-                    NotificationCenter.default.post(name: NSNotification.Name("TriggerExerciseSelection"), object: nil)
+                    NotificationCenter.default.post(name: NSNotification.Name("TriggerExerciseSelection"), object: nil, userInfo: tokenData != nil ? ["tokenData": tokenData!] : nil)
                 } else if action == "banked" {
-                    NotificationCenter.default.post(name: NSNotification.Name("TriggerBankedUnlock"), object: nil)
+                    NotificationCenter.default.post(name: NSNotification.Name("TriggerBankedUnlock"), object: nil, userInfo: tokenData != nil ? ["tokenData": tokenData!] : nil)
                 }
             }
         } else if let exercise = userInfo["exercise"] as? String {

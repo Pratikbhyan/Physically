@@ -96,9 +96,10 @@ struct PushupView: View {
     
     private func finishSession() {
         if let stats = currentUserStats {
-            let rate = Double(stats.exchangeRatePushups)
-            let earned = (Double(pushupManager.pushupCount) / rate) * 5.0
-            stats.bankedMinutes += earned
+            // Rate is now "Seconds per Rep"
+            let secondsEarned = Double(pushupManager.pushupCount) * Double(stats.exchangeRatePushups)
+            let minutesEarned = secondsEarned / 60.0
+            stats.bankedMinutes += minutesEarned
         }
         dismiss()
     }

@@ -10,26 +10,56 @@ struct SettingsView: View {
             Form {
                 Section(header: Text("Exchange Rates")) {
                     VStack(alignment: .leading) {
-                        Text("Squats for 5 Minutes")
+                        Text("Squat Exchange Rate")
                         HStack {
                             Slider(value: Binding(
-                                get: { Double(userStats.exchangeRateSquats) },
-                                set: { userStats.exchangeRateSquats = Int($0) }
-                            ), in: 5...50, step: 5)
-                            Text("\(userStats.exchangeRateSquats)")
+                                get: {
+                                    let val = userStats.exchangeRateSquats
+                                    if val <= 30 { return 0 }
+                                    if val <= 60 { return 1 }
+                                    return Double(val / 60) - 1.0 + 1.0 // Map 120->2, 180->3...
+                                    // Actually simpler to map index:
+                                    // 0: 30, 1: 60, 2: 120, 3: 180, 4: 240, 5: 300
+                                    // Let's use a helper function logic inline or cleaner binding
+                                    let steps = [30, 60, 120, 180, 240, 300]
+                                    return Double(steps.firstIndex(where: { $0 >= val }) ?? 0)
+                                },
+                                set: {
+                                    let steps = [30, 60, 120, 180, 240, 300]
+                                    let index = Int($0)
+                                    if index < steps.count {
+                                        userStats.exchangeRateSquats = steps[index]
+                                    }
+                                }
+                            ), in: 0...5, step: 1)
+                            
+                            Text(formatRate(userStats.exchangeRateSquats))
                                 .fontWeight(.bold)
+                                .frame(width: 60, alignment: .trailing)
                         }
                     }
                     
                     VStack(alignment: .leading) {
-                        Text("Pushups for 5 Minutes")
+                        Text("Pushup Exchange Rate")
                         HStack {
                             Slider(value: Binding(
-                                get: { Double(userStats.exchangeRatePushups) },
-                                set: { userStats.exchangeRatePushups = Int($0) }
-                            ), in: 5...50, step: 5)
-                            Text("\(userStats.exchangeRatePushups)")
+                                get: {
+                                    let val = userStats.exchangeRatePushups
+                                    let steps = [30, 60, 120, 180, 240, 300]
+                                    return Double(steps.firstIndex(where: { $0 >= val }) ?? 0)
+                                },
+                                set: {
+                                    let steps = [30, 60, 120, 180, 240, 300]
+                                    let index = Int($0)
+                                    if index < steps.count {
+                                        userStats.exchangeRatePushups = steps[index]
+                                    }
+                                }
+                            ), in: 0...5, step: 1)
+                            
+                            Text(formatRate(userStats.exchangeRatePushups))
                                 .fontWeight(.bold)
+                                .frame(width: 60, alignment: .trailing)
                         }
                     }
                 }
@@ -76,5 +106,10 @@ struct SettingsView: View {
             userStats.bankedMinutes += 15
             BlockingManager.shared.unblockTemporarily()
         }
+    }
+    
+    private func formatRate(_ seconds: Int) -> String {
+        if seconds == 30 { return "0.5 min" }
+        return "\(seconds / 60) min"
     }
 }

@@ -50,7 +50,15 @@ class ShieldActionExtension: ShieldActionDelegate {
         }
         
         content.sound = .default
-        content.userInfo = ["action": actionType]
+        
+        var userInfo: [String: Any] = ["action": actionType]
+        
+        // Encode ApplicationToken
+        if let data = try? JSONEncoder().encode(application) {
+            userInfo["tokenData"] = data
+        }
+        
+        content.userInfo = userInfo
         
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
         

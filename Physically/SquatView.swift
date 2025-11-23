@@ -102,9 +102,10 @@ struct SquatView: View {
     
     private func finishSession() {
         if let stats = currentUserStats {
-            let rate = Double(stats.exchangeRateSquats)
-            let earned = (Double(squatManager.squatCount) / rate) * 5.0
-            stats.bankedMinutes += earned
+            // Rate is now "Seconds per Rep"
+            let secondsEarned = Double(squatManager.squatCount) * Double(stats.exchangeRateSquats)
+            let minutesEarned = secondsEarned / 60.0
+            stats.bankedMinutes += minutesEarned
         }
         dismiss()
     }

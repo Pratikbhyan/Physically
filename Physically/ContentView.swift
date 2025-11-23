@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import FamilyControls
+import ManagedSettings
 
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
@@ -135,7 +136,12 @@ struct ContentView: View {
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("TriggerExerciseSelection"))) { _ in
                 showExerciseSelection = true
             }
-            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("TriggerBankedUnlock"))) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("TriggerBankedUnlock"))) { notification in
+                if let tokenData = notification.userInfo?["tokenData"] as? Data {
+                    pendingUnlockToken = try? JSONDecoder().decode(ApplicationToken.self, from: tokenData)
+                } else {
+                    pendingUnlockToken = nil
+                }
                 showBankedMinutesInput = true
             }
             .alert("Use Banked Minutes", isPresented: $showBankedMinutesInput) {
@@ -159,14 +165,16 @@ struct ContentView: View {
     @State private var showBankedMinutesInput = false
     @State private var minutesToUse = ""
     @State private var showInsufficientFundsAlert = false
+    @State private var pendingUnlockToken: ApplicationToken?
     
     private func processBankedUnlock() {
         guard let minutes = Int(minutesToUse), minutes > 0 else { return }
         
         if currentUserStats.bankedMinutes >= Double(minutes) {
             currentUserStats.bankedMinutes -= Double(minutes)
-            BlockingManager.shared.unblockTemporarily(duration: TimeInterval(minutes * 60))
+            BlockingManager.shared.unblockTemporarily(duration: TimeInterval(minutes * 60), for: pendingUnlockToken)
             minutesToUse = "" // Reset
+            pendingUnlockToken = nil
         } else {
             showInsufficientFundsAlert = true
         }
