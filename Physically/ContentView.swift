@@ -67,49 +67,47 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    // Active Session Indicator
-                    if let endTime = blockingManager.sessionEndTime, endTime > Date() {
-                        VStack(spacing: 10) {
-                            Text("Active Session")
+                    // Active Sessions List
+                    if !blockingManager.activeSessions.isEmpty {
+                        VStack(spacing: 15) {
+                            Text("Active Sessions")
                                 .font(.caption)
                                 .foregroundColor(.gray)
                                 .textCase(.uppercase)
                                 .tracking(1)
                             
-                            HStack {
-                                if let token = blockingManager.currentlyUnblockedToken {
-                                    Label(token)
-                                        .labelStyle(.iconOnly)
-                                        .scaleEffect(1.5)
-                                } else {
-                                    Image(systemName: "lock.open.fill")
-                                        .font(.title)
-                                        .foregroundColor(.green)
+                            ForEach(Array(blockingManager.activeSessions.keys), id: \.self) { token in
+                                if let endTime = blockingManager.activeSessions[token], endTime > Date() {
+                                    HStack {
+                                        Label(token)
+                                            .labelStyle(.iconOnly)
+                                            .scaleEffect(1.2)
+                                        
+                                        Spacer()
+                                        
+                                        Text(timerInterval: Date()...endTime, countsDown: true)
+                                            .font(.system(.body, design: .monospaced))
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.white)
+                                        
+                                        Button(action: {
+                                            blockingManager.cancelSession(for: token)
+                                        }) {
+                                            Image(systemName: "lock.fill")
+                                                .foregroundColor(.red)
+                                                .padding(8)
+                                                .background(Color.red.opacity(0.2))
+                                                .clipShape(Circle())
+                                        }
+                                    }
+                                    .padding()
+                                    .background(Color.white.opacity(0.1))
+                                    .cornerRadius(15)
                                 }
-                                
-                                Text(timerInterval: Date()...endTime, countsDown: true)
-                                    .font(.system(.title2, design: .monospaced))
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.white)
-                            }
-                            .padding()
-                            .background(Color.white.opacity(0.1))
-                            .cornerRadius(15)
-                            
-                            Button(action: {
-                                blockingManager.stopSession()
-                            }) {
-                                Text("Lock Now")
-                                    .font(.caption)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.red)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.red.opacity(0.2))
-                                    .cornerRadius(8)
                             }
                         }
                         .padding(.bottom, 20)
+                        .padding(.horizontal)
                     }
                     
                     // 1. Select Apps to Block (Direct Picker)

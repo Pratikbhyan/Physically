@@ -18,6 +18,13 @@ struct PhysicallyApp: App {
     @State private var showSquatView = false
 
     init() {
+        // Request Notification Permissions
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                print("Notification permission error: \(error)")
+            }
+        }
+        
         do {
             container = try ModelContainer(for: UserStats.self)
         } catch {

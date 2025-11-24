@@ -27,3 +27,7 @@ extension UserDefaults {
 extension DeviceActivityName {
     static let sessionTimer = DeviceActivityName("sessionTimer")
 }
+
+extension DeviceActivityEvent.Name {
+    static let sessionLimit = DeviceActivityEvent.Name("sessionLimit")
+}

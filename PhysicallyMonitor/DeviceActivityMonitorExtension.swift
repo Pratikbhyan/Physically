@@ -2,6 +2,7 @@ import DeviceActivity
 import ManagedSettings
 import FamilyControls
 import Foundation
+import UserNotifications
 import os.log // Import for logging
 
 class DeviceActivityMonitorExtension: DeviceActivityMonitor {
@@ -17,20 +18,42 @@ class DeviceActivityMonitorExtension: DeviceActivityMonitor {
     override func intervalDidEnd(for activity: DeviceActivityName) {
         super.intervalDidEnd(for: activity)
         logger.log("PhysicallyMonitor: Interval DID END for \(activity.rawValue)")
-        
+        lockApps(for: activity)
+    }
+    
+    override func intervalWillStartWarning(for activity: DeviceActivityName) {
+        super.intervalWillStartWarning(for: activity)
+        logger.log("PhysicallyMonitor: Interval WARNING for \(activity.rawValue) - Locking now.")
+        lockApps(for: activity)
+    }
+    
+    override func eventDidReachThreshold(_ event: DeviceActivityEvent.Name, activity: DeviceActivityName) {
+        super.eventDidReachThreshold(event, activity: activity)
+        logger.log("PhysicallyMonitor: Threshold REACHED for \(event.rawValue) - Locking now.")
+        lockApps(for: activity)
+    }
+    
+    private func lockApps(for activity: DeviceActivityName) {
         if activity == .sessionTimer {
             // 1. Load the saved apps from App Group using SharedModel helper
             let selection = UserDefaults.shared.appSelection
             
-            // 2. Re-Apply the shield (LOCK EVERYTHING)
-            // Even if selection is empty, this ensures we reset the state.
+            // 2. Force Refresh (The "Flash All" Strategy)
+            // We briefly block ALL categories. This is an aggressive state change
+            // that forces the system to re-evaluate the foreground app immediately.
+            store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.all()
+            
+            // Wait a moment to let the system propagate the "Block All" state
+            Thread.sleep(forTimeInterval: 0.5)
+            
+            // 3. Re-Apply the correct selection
             store.shield.applications = selection.applicationTokens
             store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(selection.categoryTokens)
             
-            // 3. Stop monitoring so this doesn't repeat tomorrow
-            // Note: The extension generally cannot stop monitoring for the main app, 
-            // but the re-lock logic above is persistent until changed.
+            // 4. Log
             logger.log("PhysicallyMonitor: Shield restored. Blocked \(selection.applicationTokens.count) apps.")
         }
     }
 }
+
+

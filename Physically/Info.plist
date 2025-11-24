@@ -6,5 +6,9 @@
 	<string>Physically needs camera access to detect your squats.</string>
 	<key>NSFamilyControlsUsageDescription</key>
 	<string>Physically needs access to block apps until you complete your workout.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 </dict>
 </plist>

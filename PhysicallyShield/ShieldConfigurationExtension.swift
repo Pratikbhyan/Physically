@@ -21,8 +21,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
     override func configuration(shielding application: Application, in category: ActivityCategory) -> ShieldConfiguration {
         // Customize the shield as needed for applications shielded because of their category.
         return ShieldConfiguration(
-            backgroundBlurStyle: .dark,
-            secondaryButtonLabel: ShieldConfiguration.Label(text: "Emergency / Walk of Shame", color: .lightGray)
+            backgroundBlurStyle: .dark
         )
     }
     
@@ -35,8 +34,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
             title: ShieldConfiguration.Label(text: "Access Denied", color: .white),
             subtitle: ShieldConfiguration.Label(text: "Price: 5 Squats", color: .white),
             primaryButtonLabel: ShieldConfiguration.Label(text: "Pay the Toll", color: .black),
-            primaryButtonBackgroundColor: .white,
-            secondaryButtonLabel: ShieldConfiguration.Label(text: "Emergency / Walk of Shame", color: .lightGray)
+            primaryButtonBackgroundColor: .white
         )
     }
     
@@ -49,8 +47,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
             title: ShieldConfiguration.Label(text: "Access Denied", color: .white),
             subtitle: ShieldConfiguration.Label(text: "Price: 5 Squats", color: .white),
             primaryButtonLabel: ShieldConfiguration.Label(text: "Pay the Toll", color: .black),
-            primaryButtonBackgroundColor: .white,
-            secondaryButtonLabel: ShieldConfiguration.Label(text: "Emergency / Walk of Shame", color: .lightGray)
+            primaryButtonBackgroundColor: .white
         )
     }
 }
