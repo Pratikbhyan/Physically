@@ -17,13 +17,12 @@ class ShieldActionExtension: ShieldActionDelegate {
         // Handle the action as needed.
         switch action {
         case .primaryButtonPressed:
-            // Unlock with Exercise
-            scheduleNotification(for: application, actionType: "exercise")
+            // Use Banked Minutes (Primary Button)
+            scheduleNotification(for: application, actionType: "banked")
             completionHandler(.none)
             
         case .secondaryButtonPressed:
-            // Use Banked Minutes
-            scheduleNotification(for: application, actionType: "banked")
+            // No secondary button currently
             completionHandler(.none)
             
         @unknown default:
@@ -59,6 +58,19 @@ class ShieldActionExtension: ShieldActionDelegate {
         }
         
         content.userInfo = userInfo
+        
+        // Add attachment if available
+        if let imageURL = Bundle.main.url(forResource: "appsymbol", withExtension: "png") ?? 
+                          Bundle.main.url(forResource: "appsymbol", withExtension: "jpg") {
+            if let attachment = try? UNNotificationAttachment(identifier: "logo", url: imageURL, options: nil) {
+                content.attachments = [attachment]
+            }
+        } else {
+            // Fallback: Try to find it in assets if possible, but extensions have limited access.
+            // If the file isn't a standalone resource, this might fail.
+            // Assuming user added it as a file or it's in a shared bundle.
+            // For now, we try standard bundle resource.
+        }
         
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
         

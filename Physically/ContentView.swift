@@ -185,43 +185,24 @@ struct ContentView: View {
                 } else {
                     pendingUnlockToken = nil
                 }
-                showBankedMinutesInput = true
-            }
-            .alert("Use Banked Minutes", isPresented: $showBankedMinutesInput) {
-                TextField("Minutes", text: $minutesToUse)
-                    .keyboardType(.numberPad)
-                Button("Unlock") {
-                    processBankedUnlock()
+                
+                if currentUserStats.bankedMinutes > 0 {
+                    showRedeemSheet = true
+                } else {
+                    NotificationCenter.default.post(name: NSNotification.Name("TriggerExerciseSelection"), object: nil)
                 }
-                Button("Cancel", role: .cancel) { }
-            } message: {
-                Text("You have \(Int(currentUserStats.bankedMinutes)) minutes available.\nHow many do you want to use?")
             }
-            .alert("Insufficient Minutes", isPresented: $showInsufficientFundsAlert) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("You don't have enough minutes banked for that amount.")
+            .sheet(isPresented: $showRedeemSheet) {
+                RedeemView(applicationToken: pendingUnlockToken)
             }
         }
     }
     
-    @State private var showBankedMinutesInput = false
-    @State private var minutesToUse = ""
-    @State private var showInsufficientFundsAlert = false
+    @State private var showRedeemSheet = false
     @State private var pendingUnlockToken: ApplicationToken?
+    @State private var showInsufficientFundsAlert = false
     
-    private func processBankedUnlock() {
-        guard let minutes = Int(minutesToUse), minutes > 0 else { return }
-        
-        if currentUserStats.bankedMinutes >= Double(minutes) {
-            currentUserStats.bankedMinutes -= Double(minutes)
-            BlockingManager.shared.unblockTemporarily(duration: TimeInterval(minutes * 60), for: pendingUnlockToken)
-            minutesToUse = "" // Reset
-            pendingUnlockToken = nil
-        } else {
-            showInsufficientFundsAlert = true
-        }
-    }
+    // Removed processBankedUnlock as it is now handled in RedeemView
     
     private func canTakeDebt() -> Bool {
         guard let lastDate = currentUserStats.lastDebtDate else { return true }

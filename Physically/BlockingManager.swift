@@ -168,10 +168,10 @@ class BlockingManager: ObservableObject {
     }
     
     private func forceRefreshShield() {
-        // Flash All Strategy
-        store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.all()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        // Just update the shield directly.
+        // The "Flash All" strategy (.all()) causes the shield to appear on unblocked apps briefly.
+        // By simply recalculating and applying the correct shield, we avoid this artifact.
+        DispatchQueue.main.async {
             self.updateShield()
             print("Shield Refreshed after expiration.")
         }
@@ -190,5 +190,9 @@ class BlockingManager: ObservableObject {
     func unblockTemporarily(duration: TimeInterval = 900, for token: ApplicationToken? = nil) {
         let minutes = Int(ceil(duration / 60.0))
         startSession(minutes: minutes, for: token)
+    }
+    
+    func unblockApps(for duration: TimeInterval, token: ApplicationToken? = nil) {
+        unblockTemporarily(duration: duration, for: token)
     }
 }

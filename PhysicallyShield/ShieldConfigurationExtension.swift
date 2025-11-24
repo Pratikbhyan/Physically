@@ -9,12 +9,13 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
     override func configuration(shielding application: Application) -> ShieldConfiguration {
         // Customize the shield as needed for applications.
         return ShieldConfiguration(
-            backgroundColor: .black,
-            title: ShieldConfiguration.Label(text: "Physically Locked", color: .cyan),
-            subtitle: ShieldConfiguration.Label(text: "Earn your screen time.", color: .white),
-            primaryButtonLabel: ShieldConfiguration.Label(text: "Unlock with Exercise", color: .black),
-            primaryButtonBackgroundColor: .cyan,
-            secondaryButtonLabel: ShieldConfiguration.Label(text: "Use Banked Minutes", color: .cyan)
+            backgroundColor: .systemGray,
+            icon: UIImage(named: "ShieldLogo"),
+            title: ShieldConfiguration.Label(text: " ", color: .clear),
+            subtitle: ShieldConfiguration.Label(text: " ", color: .clear),
+            primaryButtonLabel: ShieldConfiguration.Label(text: "Use Banked Minutes", color: .white),
+            primaryButtonBackgroundColor: .black,
+            secondaryButtonLabel: nil
         )
     }
     

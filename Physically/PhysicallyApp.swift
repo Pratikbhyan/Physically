@@ -50,13 +50,6 @@ struct PhysicallyApp: App {
                 ContentView()
                     .onOpenURL { url in
                         if url.scheme == "physically" && url.host == "unlock" {
-                            // Handle deep link to open squat view
-                            // Ideally, we'd pass this state down or use a router.
-                            // For now, we can rely on ContentView's state if we can access it, 
-                            // or better, just reset the shield temporarily if that's the intent,
-                            // OR present the squat view.
-                            // Since ContentView is the root, we might need a better way to trigger it.
-                            // Let's use a notification for simplicity in this MVP.
                             NotificationCenter.default.post(name: NSNotification.Name("TriggerSquatSession"), object: nil)
                         }
                     }

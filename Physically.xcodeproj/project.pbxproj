@@ -69,6 +69,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6428CF4F2ED509E300E70375 /* Exceptions for "Physically" folder in "PhysicallyShield" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+			);
+			target = 64F7B1212ECDB91E00F491A2 /* PhysicallyShield */;
+		};
+		6428CF532ED517F900E70375 /* Exceptions for "Physically" folder in "PhysicallyAction" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+			);
+			target = 64B2802A2ED1527000B07C8A /* PhysicallyAction */;
+		};
 		64B280242ED14BD200B07C8A /* Exceptions for "Physically" folder in "Physically" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -127,6 +141,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				64B280242ED14BD200B07C8A /* Exceptions for "Physically" folder in "Physically" target */,
+				6428CF4F2ED509E300E70375 /* Exceptions for "Physically" folder in "PhysicallyShield" target */,
+				6428CF532ED517F900E70375 /* Exceptions for "Physically" folder in "PhysicallyAction" target */,
 				64B280792ED2252800B07C8A /* Exceptions for "Physically" folder in "PhysicallyMonitor" target */,
 			);
 			path = Physically;
