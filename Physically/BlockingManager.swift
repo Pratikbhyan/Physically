@@ -28,7 +28,7 @@ class BlockingManager: ObservableObject {
     
     private init() {
         loadSelection()
-        // Restore any persisted sessions if we had them (omitted for MVP, assuming fresh start)
+        loadSessions()
     }
     
     // MARK: - Audio Keep-Alive
@@ -90,6 +90,42 @@ class BlockingManager: ObservableObject {
         selection = UserDefaults.shared.appSelection
     }
     
+    // MARK: - Session Persistence
+    
+    private func saveSessions() {
+        // Convert [ApplicationToken: Date] to Data
+        if let data = try? JSONEncoder().encode(activeSessions) {
+            UserDefaults.standard.set(data, forKey: "activeSessions")
+        }
+    }
+    
+    private func loadSessions() {
+        if let data = UserDefaults.standard.data(forKey: "activeSessions"),
+           let savedSessions = try? JSONDecoder().decode([ApplicationToken: Date].self, from: data) {
+            
+            // Filter out expired sessions immediately
+            let now = Date()
+            var validSessions: [ApplicationToken: Date] = [:]
+            
+            for (token, endTime) in savedSessions {
+                if endTime > now {
+                    validSessions[token] = endTime
+                }
+            }
+            
+            self.activeSessions = validSessions
+            
+            // If we have valid sessions, restart the timer/audio
+            if !validSessions.isEmpty {
+                setupSilentAudio()
+                startPolling()
+                if audioPlayer?.isPlaying == false {
+                    audioPlayer?.play()
+                }
+            }
+        }
+    }
+    
     // MARK: - Session Management
     
     func startSession(minutes: Int, for token: ApplicationToken? = nil) {
@@ -110,20 +146,14 @@ class BlockingManager: ObservableObject {
                 // Specific App Unlock
                 self.activeSessions[token] = end
             } else {
-                // Global Unlock (Special case: we might want to track a "global" token or just clear all)
-                // For now, let's say global unlock clears the shield but we don't track it in the dict easily
-                // unless we define a special key. 
-                // BETTER: If token is nil, we just don't block anything for X minutes.
-                // But the user asked for "separate timers for each app".
-                // Let's assume this is primarily for specific app unlocks.
-                // If global, we can just clear the shield and set a "global" timer.
-                // For simplicity in this refactor, let's handle specific tokens.
-                // If global is requested, we can iterate all selected apps and add them to activeSessions?
-                // That seems safest.
+                // Global Unlock (fallback)
                 for appToken in self.selection.applicationTokens {
                     self.activeSessions[appToken] = end
                 }
             }
+            
+            // Save state
+            self.saveSessions()
             
             // 3. Update Shield immediately
             self.updateShield()
@@ -144,14 +174,20 @@ class BlockingManager: ObservableObject {
     private func checkSessions() {
         let now = Date()
         var didExpire = false
+        var hasChanges = false
         
         // Check for expired sessions
         for (token, endTime) in activeSessions {
             if now >= endTime {
                 activeSessions.removeValue(forKey: token)
                 didExpire = true
+                hasChanges = true
                 print("Session expired for token: \(token)")
             }
+        }
+        
+        if hasChanges {
+            saveSessions()
         }
         
         if didExpire {
@@ -169,8 +205,6 @@ class BlockingManager: ObservableObject {
     
     private func forceRefreshShield() {
         // Just update the shield directly.
-        // The "Flash All" strategy (.all()) causes the shield to appear on unblocked apps briefly.
-        // By simply recalculating and applying the correct shield, we avoid this artifact.
         DispatchQueue.main.async {
             self.updateShield()
             print("Shield Refreshed after expiration.")
@@ -179,6 +213,7 @@ class BlockingManager: ObservableObject {
     
     func cancelSession(for token: ApplicationToken) {
         activeSessions.removeValue(forKey: token)
+        saveSessions()
         forceRefreshShield()
         
         if activeSessions.isEmpty {

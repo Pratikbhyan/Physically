@@ -40,125 +40,127 @@ struct ContentView: View {
                     .opacity(0.5)
                     .edgesIgnoringSafeArea(.all)
                 
-                VStack(spacing: 40) {
-                    // Header with Settings
-                    HStack {
-                        Spacer()
-                        Button(action: { showSettingsView = true }) {
-                            Image(systemName: "gearshape.fill")
-                                .font(.title2)
-                                .foregroundColor(.white.opacity(0.7))
-                        }
-                    }
-                    .padding()
-                    
-                    Spacer()
-                    
-                    // Banked Minutes Display (Central)
-                    VStack {
-                        Text("\(Int(currentUserStats.bankedMinutes))")
-                            .font(.system(size: 80, weight: .bold, design: .rounded))
-                            .foregroundColor(.cyan)
-                        Text("MINUTES BANKED")
-                            .font(.headline)
-                            .foregroundColor(.white.opacity(0.8))
-                            .tracking(2)
-                    }
-                    
-                    Spacer()
-                    
-                    // Active Sessions List
-                    if !blockingManager.activeSessions.isEmpty {
-                        VStack(spacing: 15) {
-                            Text("Active Sessions")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                                .textCase(.uppercase)
-                                .tracking(1)
-                            
-                            ForEach(Array(blockingManager.activeSessions.keys), id: \.self) { token in
-                                if let endTime = blockingManager.activeSessions[token], endTime > Date() {
-                                    HStack {
-                                        Label(token)
-                                            .labelStyle(.iconOnly)
-                                            .scaleEffect(1.2)
-                                        
-                                        Spacer()
-                                        
-                                        Text(timerInterval: Date()...endTime, countsDown: true)
-                                            .font(.system(.body, design: .monospaced))
-                                            .fontWeight(.bold)
-                                            .foregroundColor(.white)
-                                        
-                                        Button(action: {
-                                            blockingManager.cancelSession(for: token)
-                                        }) {
-                                            Image(systemName: "lock.fill")
-                                                .foregroundColor(.red)
-                                                .padding(8)
-                                                .background(Color.red.opacity(0.2))
-                                                .clipShape(Circle())
-                                        }
-                                    }
-                                    .padding()
-                                    .background(Color.white.opacity(0.1))
-                                    .cornerRadius(15)
-                                }
+                ScrollView {
+                    VStack(spacing: 40) {
+                        // Header with Settings
+                        HStack {
+                            Spacer()
+                            Button(action: { showSettingsView = true }) {
+                                Image(systemName: "gearshape.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.white.opacity(0.7))
                             }
                         }
-                        .padding(.bottom, 20)
-                        .padding(.horizontal)
-                    }
-                    
-                    // 1. Select Apps to Block (Direct Picker)
-                    Button(action: {
-                        isPickerPresented = true
-                    }) {
-                        HStack {
-                            Image(systemName: "shield.fill")
-                            Text("Select Apps to Block")
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
                         .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.white.opacity(0.1))
-                        .cornerRadius(15)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 15)
-                                .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                        )
-                    }
-                    .padding(.horizontal, 40)
-                    .familyActivityPicker(isPresented: $isPickerPresented, selection: $blockingManager.selection)
-                    .onChange(of: blockingManager.selection) {
-                        blockingManager.updateShield()
-                    }
-                    
-                    // 2. Add to Balance
-                    Button(action: {
-                        showExerciseSelection = true
-                    }) {
-                        HStack {
-                            Image(systemName: "plus.circle.fill")
-                            Text("Add to Balance")
+                        
+                        Spacer()
+                        
+                        // Banked Minutes Display (Central)
+                        VStack {
+                            Text("\(Int(currentUserStats.bankedMinutes))")
+                                .font(.system(size: 80, weight: .bold, design: .rounded))
+                                .foregroundColor(.cyan)
+                            Text("MINUTES BANKED")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.8))
+                                .tracking(2)
                         }
-                        .font(.headline)
-                        .foregroundColor(.black)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.cyan)
-                        .cornerRadius(15)
-                        .shadow(color: .cyan.opacity(0.5), radius: 10, x: 0, y: 5)
+                        
+                        Spacer()
+                        
+                        // Active Sessions List
+                        if !blockingManager.activeSessions.isEmpty {
+                            VStack(spacing: 15) {
+                                Text("Active Sessions")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                    .textCase(.uppercase)
+                                    .tracking(1)
+                                
+                                ForEach(Array(blockingManager.activeSessions.keys), id: \.self) { token in
+                                    if let endTime = blockingManager.activeSessions[token], endTime > Date() {
+                                        HStack {
+                                            Label(token)
+                                                .labelStyle(.iconOnly)
+                                                .scaleEffect(1.2)
+                                            
+                                            Spacer()
+                                            
+                                            Text(timerInterval: Date()...endTime, countsDown: true)
+                                                .font(.system(.body, design: .monospaced))
+                                                .fontWeight(.bold)
+                                                .foregroundColor(.white)
+                                            
+                                            Button(action: {
+                                                blockingManager.cancelSession(for: token)
+                                            }) {
+                                                Image(systemName: "lock.fill")
+                                                    .foregroundColor(.red)
+                                                    .padding(8)
+                                                    .background(Color.red.opacity(0.2))
+                                                    .clipShape(Circle())
+                                            }
+                                        }
+                                        .padding()
+                                        .background(Color.white.opacity(0.1))
+                                        .cornerRadius(15)
+                                    }
+                                }
+                            }
+                            .padding(.bottom, 20)
+                            .padding(.horizontal)
+                        }
+                        
+                        // 1. Select Apps to Block (Direct Picker)
+                        Button(action: {
+                            isPickerPresented = true
+                        }) {
+                            HStack {
+                                Image(systemName: "shield.fill")
+                                Text("Select Apps to Block")
+                            }
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.white.opacity(0.1))
+                            .cornerRadius(15)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                            )
+                        }
+                        .padding(.horizontal, 40)
+                        .familyActivityPicker(isPresented: $isPickerPresented, selection: $blockingManager.selection)
+                        .onChange(of: blockingManager.selection) {
+                            blockingManager.updateShield()
+                        }
+                        
+                        // 2. Add to Balance
+                        Button(action: {
+                            showExerciseSelection = true
+                        }) {
+                            HStack {
+                                Image(systemName: "plus.circle.fill")
+                                Text("Add to Balance")
+                            }
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.cyan)
+                            .cornerRadius(15)
+                            .shadow(color: .cyan.opacity(0.5), radius: 10, x: 0, y: 5)
+                        }
+                        .padding(.horizontal, 40)
+                        .confirmationDialog("Choose Exercise", isPresented: $showExerciseSelection, titleVisibility: .visible) {
+                            Button("Squats") { showSquatView = true }
+                            Button("Pushups") { showPushupView = true }
+                            Button("Cancel", role: .cancel) { }
+                        }
+                        
+                        Spacer()
                     }
-                    .padding(.horizontal, 40)
-                    .confirmationDialog("Choose Exercise", isPresented: $showExerciseSelection, titleVisibility: .visible) {
-                        Button("Squats") { showSquatView = true }
-                        Button("Pushups") { showPushupView = true }
-                        Button("Cancel", role: .cancel) { }
-                    }
-                    
-                    Spacer()
                 }
             }
             .sheet(isPresented: $showSettingsView) {
@@ -204,19 +206,7 @@ struct ContentView: View {
     
     // Removed processBankedUnlock as it is now handled in RedeemView
     
-    private func canTakeDebt() -> Bool {
-        guard let lastDate = currentUserStats.lastDebtDate else { return true }
-        return !Calendar.current.isDateInToday(lastDate)
-    }
-    
-    private func handleDebtRequest() {
-        if canTakeDebt() {
-            currentUserStats.lastDebtDate = Date()
-            currentUserStats.debtMinutes += 15
-            currentUserStats.bankedMinutes += 15
-            BlockingManager.shared.unblockTemporarily(duration: 900)
-        }
-    }
+    // Removed redundant debt logic from ContentView as it's now in SettingsView
         }
 struct StatCard: View {
     let title: String

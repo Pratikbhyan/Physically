@@ -60,16 +60,30 @@ class ShieldActionExtension: ShieldActionDelegate {
         content.userInfo = userInfo
         
         // Add attachment if available
-        if let imageURL = Bundle.main.url(forResource: "appsymbol", withExtension: "png") ?? 
-                          Bundle.main.url(forResource: "appsymbol", withExtension: "jpg") {
-            if let attachment = try? UNNotificationAttachment(identifier: "logo", url: imageURL, options: nil) {
-                content.attachments = [attachment]
+        // Gold Standard: Copy to temp directory to ensure accessibility
+        let bundle = Bundle(for: Self.self)
+        if let imageURL = bundle.url(forResource: "appsymbol", withExtension: "png") ?? 
+                          bundle.url(forResource: "appsymbol", withExtension: "jpg") {
+            
+            let tempDir = FileManager.default.temporaryDirectory
+            let tempFileURL = tempDir.appendingPathComponent("notification_icon.png")
+            
+            do {
+                // Remove existing file if any
+                if FileManager.default.fileExists(atPath: tempFileURL.path) {
+                    try FileManager.default.removeItem(at: tempFileURL)
+                }
+                
+                // Copy from bundle to temp
+                try FileManager.default.copyItem(at: imageURL, to: tempFileURL)
+                
+                // Create attachment from temp file
+                if let attachment = try? UNNotificationAttachment(identifier: "logo", url: tempFileURL, options: nil) {
+                    content.attachments = [attachment]
+                }
+            } catch {
+                print("Failed to copy image for notification: \(error)")
             }
-        } else {
-            // Fallback: Try to find it in assets if possible, but extensions have limited access.
-            // If the file isn't a standalone resource, this might fail.
-            // Assuming user added it as a file or it's in a shared bundle.
-            // For now, we try standard bundle resource.
         }
         
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
